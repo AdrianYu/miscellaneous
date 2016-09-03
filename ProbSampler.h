@@ -21,17 +21,24 @@ public:
     /*
         prob_prop: need not to sum to one
     */
-    void init(const std::vector<double> &prob_prop) {
-        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    bool init(const std::vector<double> &prob_prop, unsigned seed = -1) {
+        if (prob_prop.empty()) {
+            return false;
+        }
+        if (-1 == seed) {
+            seed = std::chrono::system_clock::now().time_since_epoch().count();
+        }
         rnd_gen.seed(seed);
-        probs.resize(prob_prop.size());
-        assert(!prob_prop.empty());
         const double prob_p_sum = std::accumulate(prob_prop.begin(), prob_prop.end(), 0.0);
         probs.resize(prob_prop.size());
         for (size_t i = 0; i < probs.size(); ++i) {
+            if (prob_prop[i] < 0) {
+                return false;
+            }
             probs[i] = prob_prop[i] / prob_p_sum;
         }
         GenAlias(probs, Alias);
+        return true;
     }
 
     size_t operator()(void) {
