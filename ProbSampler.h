@@ -81,13 +81,13 @@ protected:
             L.pop_front();
         }
         // if any of the H/L is not empty, we fill Alias with the same index.
-        if (!L.empty()) {
+        while (!L.empty()) {
             Alias.push_back(std::make_tuple(L.front().first, L.front().first, L.front().second));
+            L.pop_front();
         }
-        else {
-            if (!H.empty()) {
-                Alias.push_back(std::make_tuple(H.front().first, H.front().first, H.front().second));
-            }
+        while (!H.empty()) {
+            Alias.push_back(std::make_tuple(H.front().first, H.front().first, H.front().second));
+            H.pop_front();
         }
     }
 
